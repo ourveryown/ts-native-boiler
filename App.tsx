@@ -8,9 +8,8 @@ const instructions = Platform.select({
     "Shake or press menu button for dev menu"
 });
 
-interface Props {}
-export default class App extends Component<Props> {
-  render() {
+export default class App extends Component {
+  public render() {
     return (
       <View>
         <Text>Welcome to React Native!</Text>
