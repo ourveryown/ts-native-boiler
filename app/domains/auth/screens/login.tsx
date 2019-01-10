@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withNamespaces, WithNamespaces } from "react-i18next";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import styled from "../../app/styled-components";
@@ -38,7 +39,7 @@ interface IOtherProps {
   navigation: NavigationScreenProp<any, any>;
 }
 
-type Props = IStateProps & IDispatchProps & IOtherProps;
+type Props = IStateProps & IDispatchProps & WithNamespaces & IOtherProps;
 
 class Login extends Component<Props> {
   public onEmailChange = (text: string) => {
@@ -49,14 +50,17 @@ class Login extends Component<Props> {
     this.props.loginInputChanged("password", text);
   }
 
+  public goToMainStack = () => {
+    this.props.navigation.navigate("Main");
+  }
+
   public login = () => {
     const {
       email,
       loadingAction,
       loginAction,
       loginMutation,
-      password,
-      navigation
+      password
     } = this.props;
 
     const variables = {
@@ -70,7 +74,7 @@ class Login extends Component<Props> {
       .then((res) => {
         loadingAction(false);
         loginAction(res.data.login);
-        navigation.navigate("Main");
+        this.goToMainStack();
       })
       .catch(() => {
         loadingAction(false);
@@ -78,7 +82,7 @@ class Login extends Component<Props> {
   }
 
   public render() {
-    const { email, password, loading } = this.props;
+    const { t, email, password, loading } = this.props;
 
     if (loading) {
       return <View />;
@@ -98,7 +102,12 @@ class Login extends Component<Props> {
         />
         <TouchableOpacity onPress={this.login}>
           <StyledText color="#A12345">
-            Login! {email} {password}
+            {t("login")} {email} {password}
+          </StyledText>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this.goToMainStack}>
+          <StyledText color="#C12345">
+            {t("main-nav")} {email} {password}
           </StyledText>
         </TouchableOpacity>
       </View>
@@ -122,4 +131,4 @@ const mapDispatchToProps = (dispatch: Dispatch<ApplicationAction>) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(compose(graphql(LOGIN, { name: "loginMutation" }))(Login));
+)(compose(graphql(LOGIN, { name: "loginMutation" }))(withNamespaces()(Login)));

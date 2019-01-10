@@ -8,6 +8,9 @@ import Client from "./app/config/api";
 import { Provider } from "react-redux";
 import configureStore from "./app/config/store";
 
+// i18n
+import "./app/config/i18n";
+
 // STYLED COMPONENTS
 import { ThemeProvider } from "styled-components";
 import theme from "./app/theme";
